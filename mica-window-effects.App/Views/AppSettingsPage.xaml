@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="mica-window-effects.App.Views.AppSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:mica-window-effects.App.Controls"
+    xmlns:coreModels="using:mica-window-effects.CoreUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:mica-window-effects.App.Helpers"
+    xmlns:labs="using:CommunityToolkit.WinUI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    NavigationCacheMode="Disabled"
+    Unloaded="Page_Unloaded"
+    mc:Ignorable="d">
+
+    <controls:SettingsPageControl x:Uid="AppSettingsPage">
+        <StackPanel Spacing="{StaticResource SettingsCardSpacing}">
+            <StackPanel.ChildrenTransitions>
+                <EntranceThemeTransition FromVerticalOffset="50" />
+                <RepositionThemeTransition IsStaggeringEnabled="False" />
+            </StackPanel.ChildrenTransitions>
+
+            <TextBlock x:Uid="StartupLabel" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
+            <labs:SettingsCard x:Uid="StartupCard">
+                <labs:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE17C;" />
+                </labs:SettingsCard.HeaderIcon>
+
+                <ToggleSwitch x:Name="StartupToggle" Toggled="StartupToggle_Toggled" />
+            </labs:SettingsCard>
+
+            <TextBlock x:Uid="UpdateLabel" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
+            <labs:SettingsCard x:Uid="CheckForUpdatesCard">
+                <labs:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE895;" />
+                </labs:SettingsCard.HeaderIcon>
+
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <ProgressRing
+                        Width="20"
+                        Height="20"
+                        HorizontalAlignment="Center"
+                        IsActive="{x:Bind ViewModel.CheckForUpdatesCommand.IsRunning, Mode=OneWay}"
+                        IsIndeterminate="True" />
+                    <Button
+                        x:Uid="CheckForUpdatesButton"
+                        HorizontalAlignment="Center"
+                        Command="{x:Bind ViewModel.CheckForUpdatesCommand}"
+                        IsEnabled="{x:Bind helpers:FunctionBindings.Not(ViewModel.CheckForUpdatesCommand.IsRunning), Mode=OneWay}" />
+                </StackPanel>
+            </labs:SettingsCard>
+
+            <labs:SwitchPresenter
+                x:Name="UpdateInfoContainer"
+                x:Load="{x:Bind ViewModel.UpdateChecked, Mode=OneWay}"
+                Value="{x:Bind ViewModel.UpdateAvailability, Mode=OneWay}">
+                <labs:Case Value="{x:Bind coreModels:UpdateAvailability.NoUpdate}">
+                    <InfoBar
+                        x:Uid="UpToDateInfoBar"
+                        IsClosable="False"
+                        IsOpen="True"
+                        Severity="Success" />
+                </labs:Case>
+                <labs:Case Value="{x:Bind coreModels:UpdateAvailability.UpdateAvailable}">
+                    <InfoBar
+                        x:Uid="UpdateAvailableInfoBar"
+                        IsClosable="False"
+                        IsOpen="True"
+                        Severity="Warning" />
+                </labs:Case>
+                <labs:Case Value="{x:Bind coreModels:UpdateAvailability.Error}">
+                    <InfoBar
+                        x:Uid="UpdateErrorInfoBar"
+                        IsClosable="False"
+                        IsOpen="True"
+                        Severity="Error" />
+                </labs:Case>
+            </labs:SwitchPresenter>
+
+            <TextBlock x:Uid="TelemetryLabel" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
+            <labs:SettingsCard x:Uid="TelemetryCard">
+                <labs:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE9D9;" />
+                </labs:SettingsCard.HeaderIcon>
+                <ToggleSwitch
+                    x:Name="TelemetryToggle"
+                    IsOn="{x:Bind SettingsService.Settings.TelemetryEnabled, Mode=TwoWay}"
+                    Toggled="TelemetryToggle_Toggled" />
+            </labs:SettingsCard>
+
+            <TextBlock x:Uid="AboutLabel" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
+            <labs:SettingsExpander x:Uid="AboutCard" Description="{x:Bind ViewModel.AppVersion}">
+                <labs:SettingsExpander.HeaderIcon>
+                    <BitmapIcon
+                        Width="64"
+                        Height="64"
+                        ShowAsMonochrome="False"
+                        UriSource="ms-appx:///Assets/Square44x44Logo.png" />
+                </labs:SettingsExpander.HeaderIcon>
+                <labs:SettingsExpander.Items>
+                    <labs:SettingsCard ContentAlignment="Left">
+                        <StackPanel>
+                            <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/mica-window-effects/mica-window-effects" />
+                            <HyperlinkButton x:Uid="PrivacyButton" NavigateUri="https://github.com/mica-window-effects/mica-window-effects.github.io/blob/main/PRIVACY.md" />
+                        </StackPanel>
+                    </labs:SettingsCard>
+                </labs:SettingsExpander.Items>
+            </labs:SettingsExpander>
+        </StackPanel>
+    </controls:SettingsPageControl>
+</Page>

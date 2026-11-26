@@ -1,0 +1,66 @@
+﻿using Microsoft.UI.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using TerraFX.Interop.Windows;
+
+using static TerraFX.Interop.Windows.Windows;
+
+namespace mica-window-effects.App.Controls;
+
+public delegate void WindowPickerButtonWindowChangedHandler(WindowPickerButton sender, HWND window);
+
+public sealed partial class WindowPickerButton : Button
+{
+    private bool capturing = false;
+
+    public static readonly DependencyProperty WindowProperty = DependencyProperty.Register(nameof(Window), typeof(HWND), typeof(WindowPickerButton), new PropertyMetadata(HWND.NULL));
+
+    public event WindowPickerButtonWindowChangedHandler? WindowChanged;
+
+    public HWND Window
+    {
+        get => (HWND)GetValue(WindowProperty);
+        set => SetValue(WindowProperty, value);
+    }
+
+
+    public WindowPickerButton()
+    {
+        DefaultStyleKey = typeof(WindowPickerButton);
+    }
+
+    protected override void OnPointerPressed(PointerRoutedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+        ProtectedCursor = InputSystemCursor.Create(InputSystemCursorShape.Cross);
+        capturing = true;
+    }
+
+    protected override void OnPointerReleased(PointerRoutedEventArgs e)
+    {
+        base.OnPointerReleased(e);
+        ProtectedCursor = null;
+        capturing = false;
+    }
+
+    protected override unsafe void OnPointerMoved(PointerRoutedEventArgs e)
+    {
+        base.OnPointerMoved(e);
+
+        if (!capturing)
+            return;
+        POINT point;
+        GetCursorPos(&point);
+        HWND window = WindowFromPoint(point);
+        Window = GetAncestor(window, GA.GA_ROOT);
+        if (Window == XamlRoot.ContentIslandEnvironment.AppWindowId.Value)
+        {
+            WindowChanged?.Invoke(this, HWND.NULL);
+        }
+        else
+        {
+            WindowChanged?.Invoke(this, Window);
+        }
+    }
+}

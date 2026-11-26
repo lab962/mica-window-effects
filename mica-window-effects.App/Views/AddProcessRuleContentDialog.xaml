@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="mica-window-effects.App.Views.AddProcessRuleContentDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:mica-window-effects.App.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:mica-window-effects.App.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Uid="AddProcessRuleDialog"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{x:Bind ViewModel.IsAddButtonEnabled, Mode=OneWay}"
+    PrimaryButtonCommand="{x:Bind ViewModel.AddRuleCommand}"
+    mc:Ignorable="d">
+
+    <ContentDialog.Style>
+        <Style BasedOn="{StaticResource DefaultContentDialogStyle}" TargetType="local:AddProcessRuleContentDialog" />
+    </ContentDialog.Style>
+
+    <Grid ColumnSpacing="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <AutoSuggestBox
+            x:Uid="ProcessTextBox"
+            ItemsSource="{x:Bind ViewModel.Recommendations, Mode=OneWay}"
+            Text="{x:Bind ViewModel.ProcessName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            TextChanged="AutoSuggestBox_TextChanged" />
+        <controls:WindowPickerButton Grid.Column="1" WindowChanged="WindowPickerButton_WindowChanged">
+            <FontIcon Glyph="&#xF7ED;" />
+        </controls:WindowPickerButton>
+    </Grid>
+
+
+</ContentDialog>

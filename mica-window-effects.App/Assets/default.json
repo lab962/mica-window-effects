@@ -1,0 +1,17 @@
+﻿{
+	"rules": [
+		{
+			"type": "global",
+			"titleBarColor": "System",
+			"backdropPreference": "Mica"
+		},
+		{
+			"type": "process",
+			"processName": "explorer"
+		},
+		{
+			"type": "process",
+			"processName": "notepad"
+		}
+	]
+}

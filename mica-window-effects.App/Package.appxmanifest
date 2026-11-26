@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="desktop uap uap5 rescap">
+
+	<Identity
+	  Name="mica-window-effects.mica-window-effects2"
+	  Publisher="CN=Đặng Bình Minh, O=Đặng Bình Minh, L=Hà Nội, C=VN"
+	  Version="2.0.7.0" />
+
+	<mp:PhoneIdentity PhoneProductId="d18ae762-9000-47c9-bb55-868c79f41ead" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+	<Properties>
+		<DisplayName>Mica For Everyone</DisplayName>
+		<PublisherDisplayName>Dongle Insovaki</PublisherDisplayName>
+		<Logo>Assets\StoreLogo.png</Logo>
+	</Properties>
+
+	<Dependencies>
+		<TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+	</Dependencies>
+
+	<Resources>
+		<Resource Language="x-generate"/>
+	</Resources>
+
+	<Applications>
+		<Application Id="App"
+		  Executable="$targetnametoken$.exe"
+		  EntryPoint="$targetentrypoint$">
+			<uap:VisualElements
+			  DisplayName="Mica For Everyone"
+			  BackgroundColor="transparent"
+			  Square150x150Logo="Assets\Square150x150Logo.png"
+			  Square44x44Logo="Assets\Square44x44Logo.png"
+        Description="Mica For Everyone">
+				<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" ShortName="Mica For Everyone (WinUI 3)">
+					<uap:ShowNameOnTiles>
+						<uap:ShowOn Tile="square150x150Logo"/>
+						<uap:ShowOn Tile="wide310x150Logo"/>
+					</uap:ShowNameOnTiles>
+				</uap:DefaultTile>
+			</uap:VisualElements>
+			<Extensions>
+				<uap3:Extension Category="windows.appExecutionAlias" Executable="mica-window-effects.App.exe" EntryPoint="Windows.FullTrustApplication">
+					<uap3:AppExecutionAlias>
+						<desktop:ExecutionAlias Alias="mfe.exe" />
+						<desktop:ExecutionAlias Alias="mica-window-effects.exe" />
+					</uap3:AppExecutionAlias>
+				</uap3:Extension>
+				<uap5:Extension Category="windows.startupTask" Executable="mica-window-effects.App.exe" EntryPoint="Windows.FullTrustApplication">
+					<uap5:StartupTask TaskId="mica-window-effects2" Enabled="false" DisplayName="Mica For Everyone" />				
+				</uap5:Extension>
+			</Extensions>
+		</Application>
+	</Applications>
+
+	<Capabilities>
+		<rescap:Capability Name="runFullTrust" />
+	</Capabilities>
+</Package>

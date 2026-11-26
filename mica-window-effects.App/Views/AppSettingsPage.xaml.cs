@@ -1,0 +1,61 @@
+using mica-window-effects.App.ViewModels;
+using mica-window-effects.CoreUI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
+using System.Threading.Tasks;
+
+// To learn more about WinUI, the WinUI project structure,
+// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+namespace mica-window-effects.App.Views;
+
+/// <summary>
+/// An empty page that can be used on its own or navigated to within a Frame.
+/// </summary>
+public sealed partial class AppSettingsPage : Page
+{
+    private AppSettingsPageViewModel ViewModel { get; }
+    private IStartupService StartupService { get; }
+
+    private ISettingsService SettingsService { get; }
+
+    public AppSettingsPage()
+    {
+        this.InitializeComponent();
+
+        ViewModel = App.Services.GetRequiredService<AppSettingsPageViewModel>();
+        StartupService = App.Services.GetRequiredService<IStartupService>();
+        SettingsService = App.Services.GetRequiredService<ISettingsService>();
+
+        _ = PopulateStartupToggle();
+    }
+
+    private async Task PopulateStartupToggle()
+    {
+        StartupToggle.IsEnabled = await StartupService.GetStartupAvailableAsync();
+        StartupToggle.IsOn = await StartupService.GetStartupEnabledAsync();
+    }
+
+    private async void StartupToggle_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        if (StartupToggle.IsOn != await StartupService.GetStartupEnabledAsync())
+        {
+            await StartupService.SetStartupEnabledAsync(StartupToggle.IsOn);
+            await PopulateStartupToggle();
+        }
+    }
+
+    private void TelemetryToggle_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        _ = SettingsService.SaveAsync();
+    }
+
+    private void Page_Unloaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        Unloaded -= Page_Unloaded;
+        StartupToggle.Toggled -= StartupToggle_Toggled;
+        TelemetryToggle.Toggled -= TelemetryToggle_Toggled;
+
+        Bindings?.StopTracking();
+    }
+}

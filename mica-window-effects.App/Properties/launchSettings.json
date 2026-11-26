@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "mica-window-effects.App (Package)": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": true
+    },
+    "mica-window-effects.App (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
